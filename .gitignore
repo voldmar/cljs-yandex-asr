@@ -1,0 +1,14 @@
+*jar
+.lein-deps-sum
+.lein-plugins/
+.lein-repl-history
+/classes/
+/lib/
+/out/
+/target/
+asr.key
+cljs_yandex_asr.js
+cljs_yandex_asr.min.js
+cljs_yandex_asr_demo.js
+out-demo/
+pom.xml
