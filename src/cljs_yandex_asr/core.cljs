@@ -1,4 +1,4 @@
-(ns cljs-yandex-asr
+(ns cljs-yandex-asr.core
   (:require
     [chord.client :refer  [ws-ch]]
     [cljs-audiocapture :refer [capture-audio *AUDIO_FORMAT*]]

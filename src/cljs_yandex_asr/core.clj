@@ -1,4 +1,4 @@
-(ns cljs-yandex-asr)
+(ns cljs-yandex-asr.core)
 
 (defmacro load-key
   "Load key from any slurpable source"
