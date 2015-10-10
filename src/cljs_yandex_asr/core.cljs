@@ -7,7 +7,7 @@
     [cljs.pprint :refer [pprint]]
     [cljs.core.async :as async :refer [<! >! close! chan sliding-buffer]]))
 
-(defn maybe-error [message]
+(defn- maybe-error [message]
   (if (:error message)
     message
     (let [message (-> message
@@ -15,13 +15,14 @@
                       js/JSON.parse
                       (js->clj :keywordize-keys true))
           message (case (:type message)
-                    "InitResponse" {:message (:data message)}
+                    "InitResponse" {:init (:data message)}
                     "Error" {:error (:data message)}
-                    "AddDataResponse" {:message (select-keys (:data message) [:text :uttr])}
+                    "AddDataResponse" {:text (get-in message [:data :text])
+                                       :utterance? (get-in message [:data :uttr])}
                     message)]
       message)))
 
-(defn init-asr
+(defn- init-asr
   "Make web-socket and init ASR with UUID, key and format
 
   Return channel to read Chord’s WS channel from. Write audio chunks
@@ -51,7 +52,7 @@
 (defn recognize
   "Recognize audio stream in real time using Yandex SpeechKit Cloud
 
-  Returns map with :>audio channel to put audio chunks and
+  Returns map with :>audio channel to put audio chunks to and
   :<results channel to read responses from
 
   Every response is hash map with :text containing recognized text

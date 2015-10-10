@@ -7,11 +7,11 @@ recognition service
 ## Installation
 
 cljs-yandex-asr is available in Maven Central. Add it to your `:dependencies `
-in your Leiningen `project.clj`:
+in your Leiningen `project.clj` or `build.boot`:
 
 
 ```clojure
-[cljs-yandex-asr "0.1.0"]
+[cljs-yandex-asr "0.1.4"]
 ```
 
 ## Compatibility
@@ -21,15 +21,17 @@ Tested against lastest stable versions of Chrome and Firefox
 
 ## Usage
 
-cljs-yandex-asr uses [`cljs-audiocapture`][cljs-audiocapture] to
-get stream from user’s microphone and send every frame to web socket.
+cljs-yandex-asr intented to use with [`cljs-audiocapture`][cljs-audiocapture]
+to get stream from user’s microphone and send every frame to web socket. But
+feel free to experiment with other sources using this procotol.
 
-cljs-yandex-aser namespace has one public funtion `recognize`. It returns
-bidirectional channel you can put PCM frames to and read recognized text from.
+`cljs-yandex-asr.core` namespace has one public funtion `recognize`. It returns
+returns map with `:>audio` channel to put PCM frames to and `:<results` channel
+to read responses from.
 
-Response is a vector `[text utterance?]` where text is recogized text
-and `utterance?` is set to `true` if text is recognized finally, overwise
-concider `text` as partial recognition that can be changed until `utterance?`
+Each message taken from `<results` is hashmap either with keys `:text` and `:utterance?`
+or `:error` if error is occured. `utterance?` is set to `true` if text is recognized
+finally, overwise concider `text` as partial recognition that can be changed until `utterance?`
 is `true`.
 
 Also there is macro `load-key` to add API key to your code (as you cannot
@@ -41,7 +43,7 @@ of your project or you can use *local* path as argument.
 You can use this pattern:
 
 ```clojure
-(ns your-app
+(ns your-app.core
   (:require
     [cljs-audiocapture :refer [capture-audio]]
     [cljs-yandex-asr :as asr :include-macrose true]
@@ -49,19 +51,20 @@ You can use this pattern:
   (:require-macros
     [cljs.core.async.macros :refer [go go-loop]]))
 
-
-(defn- process
-  "Function that read from channel and process recognized text"
-  [])
-
 (defn ^:export main []
+  (js/console.log "Starting Application") 
   (go
-    (let [{:keys [audio-chan error]} (async/<! (capture-audio (async/sliding-buffer 1)))
-          recognize-chan (asr/recognize (asr/load-key))
-          process-chan (process)]
-      (async/put! audio-chan :start)
-      (async/pipe audio-chan recognize-chan)
-      (async/pipe recognize-chan process-chan))))
+    (let [{:keys [audio-chan error]} (async/<! (capture-audio {}))
+          {:keys [>audio <results]} (asr/recognize (asr/load-key))]
+      (if error
+        (js/console.error error)
+        (do
+          (async/pipe audio-chan >audio)
+          (async/put! audio-chan :start)
+          (loop []
+            (when-let [result (async/<! <results)]
+              (js/console.log "From ASR" (pr-str result))
+              (recur))))))))
 
 ```
 
