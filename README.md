@@ -68,4 +68,16 @@ You can use this pattern:
 
 ```
 
+## License
+
+Source Copyright © 2015 Vladimir Epifanov of Yandex. Distributed under
+the Eclipse Public License, which can be found in [LICENSE.md](LICENSE.md)
+at the root of this distribution. By using this software in any fashion,
+you are agreeing to be bound by the terms of this license. You must not remove
+this notice, or any other, from this software.
+
+Use of Yandex SpeechKit Cloud service is under conditions of Yandex SpeechKit
+Cloud Terms of Use. Full text of Yandex SpeechKit Cloud Terms of Use is
+available at [http://legal.yandex.ru/speechkit_cloud/](http://legal.yandex.ru/speechkit_cloud/)
+
 [cljs-audiocapture]: https://github.com/voldmar/cljs-audiocapture
