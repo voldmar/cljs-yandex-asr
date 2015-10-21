@@ -76,6 +76,8 @@ at the root of this distribution. By using this software in any fashion,
 you are agreeing to be bound by the terms of this license. You must not remove
 this notice, or any other, from this software.
 
+![Yandex Logo](https://yastatic.net/morda-logo/i/turkey_logos/logo.svg)
+
 Use of Yandex SpeechKit Cloud service is under conditions of Yandex SpeechKit
 Cloud Terms of Use. Full text of Yandex SpeechKit Cloud Terms of Use is
 available at [http://legal.yandex.ru/speechkit_cloud/](http://legal.yandex.ru/speechkit_cloud/)
